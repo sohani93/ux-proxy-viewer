@@ -17,7 +17,26 @@
   </head>
   <body>
     <iframe id="viewer" src=""></iframe>
-    <iframe id="targetFrame" width="100%" height="600px"></iframe>
+    
+    <!-- This div is where iframe will be dynamically inserted (only if allowed) -->
+<div id="iframeContainer"></div>
+
+<!-- Fallback UI - initially hidden -->
+<div id="fallbackUI" style="display: none; text-align: center; margin-top: 60px;">
+  <h2>⚠️ Site Cannot Be Displayed</h2>
+  <p>This website restricted embedding. Here's your reviewed version:</p>
+
+  <img id="fallbackScreenshot" 
+       src="https://via.placeholder.com/600x400?text=Loading+Fallback..."
+       alt="Fallback heatmap"
+       style="max-width: 90%; border-radius: 8px; margin-top: 20px;" />
+  
+  <br/>
+  <a href="#" class="button" target="_blank"
+     style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #5e60ce; color: white; text-decoration: none; border-radius: 5px;">
+     View Full Audit →
+  </a>
+</div>
 
   <!-- fallback UI will appear when iframe fails -->
 <div id="fallbackUI" style="display:none; padding: 40px; text-align: center;">
@@ -72,48 +91,44 @@
     </script>
 
   <script>
-  window.onload = function () {
-    const queryParams = new URLSearchParams(window.location.search);
-    const targetSite = queryParams.get("url"); // This pulls ?url=https://site
+window.onload = function () {
+  const queryParams = new URLSearchParams(window.location.search);
+  const targetSite = queryParams.get("url");
+  const fallbackImageUrl = queryParams.get("img");
 
-    const iframe = document.getElementById("targetFrame");
-    if (targetSite && iframe) {
-      iframe.src = targetSite;
-    }
-
-    // 🔍 fallback detection after delay
-    setTimeout(() => {
-      try {
-        const contents = iframe.contentDocument || iframe.contentWindow.document;
-
-        if (!contents || contents.body.innerHTML.trim() === "") {
-          triggerFallback();
-        }
-      } catch (e) {
-        console.warn("Iframe access issue:", e);
-        triggerFallback();
-      }
-    }, 3000);
-  };
+  const container = document.getElementById("iframeContainer");
+  const fallback = document.getElementById("fallbackUI");
+  const fallbackImg = document.getElementById("fallbackScreenshot");
 
   function triggerFallback() {
-  const iframe = document.getElementById("targetFrame");
-  const fallbackUI = document.getElementById("fallbackUI");
-
-  if (iframe) {
-    // Forcefully remove iframe from visibility
-    iframe.style.display = "none";
-    iframe.style.visibility = "hidden";
-    iframe.style.height = "0px";
-    iframe.remove(); // 👈 This fully deletes it from the DOM
+    container.innerHTML = ""; // Remove iframe entirely
+    fallback.style.display = "block";
+    if (fallbackImageUrl) {
+      fallbackImg.src = fallbackImageUrl;
+    }
+    console.log("⚠️ Fallback UI triggered.");
   }
 
-  if (fallbackUI) {
-    fallbackUI.style.display = "block";
-  }
+  try {
+    const testIframe = document.createElement('iframe');
+    testIframe.src = targetSite;
+    testIframe.id = "targetFrame";
+    testIframe.style.width = "100%";
+    testIframe.style.height = "700px";
+    testIframe.onerror = function () {
+      triggerFallback(); // Fallback if iframe fails to load
+    };
 
-  console.log("⚠️ Fallback triggered - iframe blocked or restricted.");
-}
+    container.appendChild(testIframe);
+
+    // Run fallback if iframe renders nothing (after 2–3s)
+    setTimeout(() => {
+      triggerFallback();
+    }, 3000);
+  } catch (error) {
+    triggerFallback();
+  }
+};
 </script>
   </body>
 </html>
