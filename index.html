@@ -99,18 +99,15 @@
   function triggerFallback() {
   const iframe = document.getElementById("targetFrame");
   const fallbackUI = document.getElementById("fallbackUI");
-  const fallbackImage = document.getElementById("fallbackScreenshot");
 
-  // Hide iframe, show fallback UI
-  if (iframe) iframe.style.display = "none";
-  if (fallbackUI) fallbackUI.style.display = "block";
+  if (iframe) {
+    iframe.style.display = "none";     // hides it
+    iframe.style.visibility = "hidden"; // ensures it's invisible
+    iframe.style.height = '0px';       // collapses space above
+  }
 
-  // Extract ?img= param and set as fallback image source
-  const queryParams = new URLSearchParams(window.location.search);
-  const fallbackImageUrl = queryParams.get("img");
-
-  if (fallbackImageUrl && fallbackImage) {
-    fallbackImage.src = fallbackImageUrl;
+  if (fallbackUI) {
+    fallbackUI.style.display = "block";
   }
 
   console.log("⚠️ Fallback triggered - iframe blocked or restricted.");
