@@ -17,40 +17,10 @@
   </head>
   <body>
     <iframe id="viewer" src=""></iframe>
-    <iframe id="targetFrame" src="URL" width="100%" height="600px"></iframe>
-
-<script>
-window.onload = function () {
-  setTimeout(() => {
-    const iframe = document.getElementById("targetFrame");
-
-    try {
-      const contents = iframe.contentDocument || iframe.contentWindow.document;
-
-      if (!contents || contents.body.innerHTML.trim() === "") {
-        triggerFallback(); // Fallback logic
-      }
-    } catch (e) {
-      // Cross-origin frame block
-      console.warn("Iframe access denied:", e);
-      triggerFallback();
-    }
-  }, 3000);
-};
-
-function triggerFallback() {
-  const iframe = document.getElementById("targetFrame");
-  const fallbackArea = document.getElementById("fallbackUI");
-
-  if (iframe) iframe.style.display = "none";
-  if (fallbackArea) fallbackArea.style.display = "block";
-
-  console.log("⚠️ Fallback triggered due to iframe load restriction.");
-}
-</script>
-
-<div id="fallbackUI" style="display:none;">
-  <p>This site couldn't be embedded. Showing fallback option.</p>
+    <iframe id="targetFrame" width="100%" height="600px"></iframe>
+    
+<div id="fallbackUI" style="display: none;">
+  <p>⚠️ This site could not be embedded. Showing AI fallback view instead.</p>
 </div>
     <script>
       const params = new URLSearchParams(window.location.search);
@@ -61,5 +31,40 @@ function triggerFallback() {
         document.body.innerHTML = "<h3>No URL provided. Append ?url=https://somesite.com</h3>";
       }
     </script>
+
+  <script>
+  window.onload = function () {
+    const queryParams = new URLSearchParams(window.location.search);
+    const targetSite = queryParams.get("url"); // This pulls ?url=https://site
+
+    const iframe = document.getElementById("targetFrame");
+    if (targetSite && iframe) {
+      iframe.src = targetSite;
+    }
+
+    // 🔍 fallback detection after delay
+    setTimeout(() => {
+      try {
+        const contents = iframe.contentDocument || iframe.contentWindow.document;
+
+        if (!contents || contents.body.innerHTML.trim() === "") {
+          triggerFallback();
+        }
+      } catch (e) {
+        console.warn("Iframe access issue:", e);
+        triggerFallback();
+      }
+    }, 3000);
+  };
+
+  function triggerFallback() {
+    const iframe = document.getElementById("targetFrame");
+    const fallbackUI = document.getElementById("fallbackUI");
+
+    if (iframe) iframe.style.display = "none";
+    if (fallbackUI) fallbackUI.style.display = "block";
+    console.log("⚠️ Fallback triggered due to iframe restriction.");
+  }
+</script>
   </body>
 </html>
