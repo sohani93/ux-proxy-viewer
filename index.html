@@ -39,9 +39,13 @@ window.onload = function () {
 };
 
 function triggerFallback() {
-  alert("Fallback triggered due to iframe failure.");
-  document.getElementById("targetFrame").style.display = "none";
-  document.getElementById("fallbackUI").style.display = "block";
+  const iframe = document.getElementById("targetFrame");
+  const fallbackArea = document.getElementById("fallbackUI");
+
+  if (iframe) iframe.style.display = "none";
+  if (fallbackArea) fallbackArea.style.display = "block";
+
+  console.log("⚠️ Fallback triggered due to iframe load restriction.");
 }
 </script>
 
