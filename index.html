@@ -101,9 +101,11 @@
   const fallbackUI = document.getElementById("fallbackUI");
 
   if (iframe) {
-    iframe.style.display = "none";     // hides it
-    iframe.style.visibility = "hidden"; // ensures it's invisible
-    iframe.style.height = '0px';       // collapses space above
+    // Forcefully remove iframe from visibility
+    iframe.style.display = "none";
+    iframe.style.visibility = "hidden";
+    iframe.style.height = "0px";
+    iframe.remove(); // 👈 This fully deletes it from the DOM
   }
 
   if (fallbackUI) {
