@@ -18,6 +18,45 @@
   <body>
     <iframe id="viewer" src=""></iframe>
     <iframe id="targetFrame" width="100%" height="600px"></iframe>
+
+  <!-- fallback UI will appear when iframe fails -->
+<div id="fallbackUI" style="display:none; padding: 40px; text-align: center;">
+  <h2>⚠️ Site Cannot Be Displayed</h2>
+  <p>This website restricted embedding. Here's your reviewed version:</p>
+
+  <img 
+    id="fallbackScreenshot"
+    src="https://yourfreehosting.com/images/fallback1.png"
+    alt="Fallback heatmap"
+    style="border: 1px solid #ccc; border-radius: 8px; max-width: 90%; margin: 20px auto;"
+  />
+
+  <a href="https://drive.google.com/your-lovable-link" target="_blank"
+     style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #5e60ce; color: white; text-decoration: none; border-radius: 5px;">
+     View Full Audit →
+  </a>
+</div>
+
+  <!-- 💿 fallback block (initially hidden) -->
+<div id="fallbackUI" style="display:none; padding: 40px; text-align: center;">
+  <h2>⚠️ Unable to Display Live Site</h2>
+  <p>This website can't be embedded due to security settings.</p>
+  <p>Heatmap fallback has been generated instead:</p>
+
+  <!-- Screenshot of the site -->
+  <img 
+  id="fallbackScreenshot"
+  src="https://via.placeholder.com/600x400?text=Fallback+Preview"
+  alt="Fallback heatmap"
+  style="border: 1px solid #ccc; border-radius: 8px; max-width: 90%; margin: 20px auto;"
+/>
+
+  <!-- Optional CTA or redirect button -->
+  <a href="https://lovable.report/1234" target="_blank" class="button"
+     style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #5e60ce; color: white; text-decoration: none; border-radius: 5px;">
+    View Annotated Report →
+  </a>
+</div>
     
 <div id="fallbackUI" style="display: none;">
   <p>⚠️ This site could not be embedded. Showing AI fallback view instead.</p>
@@ -58,13 +97,24 @@
   };
 
   function triggerFallback() {
-    const iframe = document.getElementById("targetFrame");
-    const fallbackUI = document.getElementById("fallbackUI");
+  const iframe = document.getElementById("targetFrame");
+  const fallbackUI = document.getElementById("fallbackUI");
+  const fallbackImage = document.getElementById("fallbackScreenshot");
 
-    if (iframe) iframe.style.display = "none";
-    if (fallbackUI) fallbackUI.style.display = "block";
-    console.log("⚠️ Fallback triggered due to iframe restriction.");
+  // Hide iframe, show fallback UI
+  if (iframe) iframe.style.display = "none";
+  if (fallbackUI) fallbackUI.style.display = "block";
+
+  // Extract ?img= param and set as fallback image source
+  const queryParams = new URLSearchParams(window.location.search);
+  const fallbackImageUrl = queryParams.get("img");
+
+  if (fallbackImageUrl && fallbackImage) {
+    fallbackImage.src = fallbackImageUrl;
   }
+
+  console.log("⚠️ Fallback triggered - iframe blocked or restricted.");
+}
 </script>
   </body>
 </html>
