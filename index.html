@@ -46,21 +46,32 @@
 </div>
 
   <!-- fallback UI will appear when iframe fails -->
-<div id="fallbackUI" style="display:none; padding: 40px; text-align: center;">
+<div id="fallbackUI" style="display: none; text-align: center; margin-top: 60px;">
   <h2>⚠️ Site Cannot Be Displayed</h2>
   <p>This website restricted embedding. Here's your reviewed version:</p>
 
-  <img 
-    id="fallbackScreenshot"
-    src="https://yourfreehosting.com/images/fallback1.png"
-    alt="Fallback heatmap"
-    style="border: 1px solid #ccc; border-radius: 8px; max-width: 90%; margin: 20px auto;"
-  />
+  <div style="display: inline-block; padding-bottom: 80px;"> <!-- ✅ group container -->
 
-  <a href="https://drive.google.com/your-lovable-link" target="_blank"
-     style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #5e60ce; color: white; text-decoration: none; border-radius: 5px;">
-     View Full Audit →
-  </a>
+    <img id="fallbackScreenshot"
+         src="https://via.placeholder.com/600x400?text=Heatmap+Coming+Soon"
+         alt="Fallback heatmap"
+         style="max-width: 90%; border-radius: 8px; margin-top: 20px;" />
+
+    <br/>
+
+    <a href="#"
+       target="_blank"
+       style="display: inline-block;
+              margin-top: 20px;
+              padding: 10px 20px;
+              background-color: #5e60ce;
+              color: white;
+              text-decoration: none;
+              border-radius: 5px;">
+      View Full Audit →
+    </a>
+
+  </div>
 </div>
 
   <!-- 💿 fallback block (initially hidden) -->
