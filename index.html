@@ -76,23 +76,32 @@
     }
 
     try {
-      const testIframe = document.createElement('iframe');
-      testIframe.src = targetSite;
-      testIframe.id = "targetFrame";
-      testIframe.style.width = "100%";
-      testIframe.style.height = "100vh";
-      testIframe.onerror = function () {
-        triggerFallback();
-      };
-      container.appendChild(testIframe);
+  const testIframe = document.createElement('iframe');
+  testIframe.src = targetSite;
+  testIframe.id = "targetFrame";
+  testIframe.style.width = "100%";
+  testIframe.style.height = "100vh";
 
-      // Backup fallback in case iframe silent-fails
-      setTimeout(() => {
-        triggerFallback();
-      }, 3000);
-    } catch (e) {
-      triggerFallback();
-    }
+  // Trigger fallback if there's an error loading the iframe
+  testIframe.onerror = function () {
+    triggerFallback();
+  };
+
+  // ✅ Cancel fallback if iframe loads successfully
+  testIframe.onload = function () {
+    clearTimeout(fallbackTimeout);
+    console.log("✅ iFrame loaded successfully.");
+  };
+
+  container.appendChild(testIframe);
+
+  // ⏰ Set a fallback timeout in case iframe silently fails to load
+  const fallbackTimeout = setTimeout(() => {
+    triggerFallback();
+  }, 3000);
+} catch (e) {
+  triggerFallback();
+}
   };
   </script>
 
